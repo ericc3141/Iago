@@ -8,7 +8,7 @@ using namespace std;
 
 class Player {
 private:
-    Side side;
+    Side s;
     Board board;
 
 public:
