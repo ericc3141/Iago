@@ -55,7 +55,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
             if (!board.checkMove(move, s)){
                 continue;
             }
-            int score = heuristic(move);
+            int score = weight_heuristic(move);
             if(score > max){
                 max = score;
                 best->setX(x);
@@ -79,3 +79,9 @@ int Player::heuristic(Move *move){
         return score;
     return -score;
 }
+
+int Player::weight_heuristic(Move *move){
+    return weights[move->getY()][move->getX()];
+}
+
+
