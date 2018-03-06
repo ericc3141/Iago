@@ -46,19 +46,36 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
      */
     std::cerr << s << std::endl;
     Move *move = new Move(0,0);
+    int max = -100;
+    Move *best = new Move(-1,-1);
     for (int x = 0; x < 8; x ++) {
         for (int y = 0; y < 8; y ++) {
             move->setX(x);
             move->setY(y);
-            if (board.checkMove(move, s)){
-                std::cerr << x << y << std::endl;
-                //move->setX(x+1);
-                //move->setY(y+1);
-                board.doMove(move, s);
-                return move;
+            if (!board.checkMove(move, s)){
+                continue;
+            }
+            int score = heuristic(move);
+            if(score > max){
+                max = score;
+                best->setX(x);
+                best->setY(y);
             }
         }
     }
-    std::cerr << "hi" << std::endl;
-    return nullptr;
+    if(best->getX() == -1){
+        std::cerr << "hi" << std::endl;
+        return nullptr;
+    }
+    board.doMove(best, s);
+        return best;
+}
+
+int Player::heuristic(Move *move){
+    Board *temp = board.copy();
+    temp->doMove(move, s);
+    int score = temp->countBlack() - temp->countWhite();
+    if(s == BLACK)
+        return score;
+    return -score;
 }
