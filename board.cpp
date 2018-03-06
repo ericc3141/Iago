@@ -28,6 +28,24 @@ Board *Board::copy() {
     return newBoard;
 }
 
+void Board::print(){
+    for (int i = 0; i < 64; i ++) {
+        if (i%8 == 0){
+            std::cerr<<std::endl;
+        }
+        if (taken[i]) {
+            if (black[i]){
+                std::cerr<<"b";
+            } else {
+                std::cerr<<"w";
+            }
+        } else {
+            std::cerr<<"_";
+        }
+    }
+    std::cerr<<std::endl;
+}
+
 bool Board::occupied(int x, int y) {
     return taken[x + 8*y];
 }

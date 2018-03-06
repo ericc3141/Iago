@@ -1,6 +1,7 @@
 #ifndef __BOARD_H__
 #define __BOARD_H__
 
+#include <iostream>
 #include <bitset>
 #include "common.hpp"
 using namespace std;
@@ -21,6 +22,7 @@ public:
     ~Board();
     Board *copy();
 
+    void print();
     bool isDone();
     bool hasMoves(Side side);
     bool checkMove(Move *m, Side side);
