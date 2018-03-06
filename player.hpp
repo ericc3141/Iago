@@ -26,8 +26,9 @@ public:
     ~Player();
 
     Move *doMove(Move *opponentsMove, int msLeft);
-    int heuristic(Move *move);
+    int heuristic(Move *move, Side side, Board *b);
     int weight_heuristic(Move *move);
+    int minimax(Move *move, int depth, Side side, Board *b);
     // Flag to tell if the player is running within the test_minimax context
     bool testingMinimax;
 };

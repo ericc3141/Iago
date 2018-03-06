@@ -16,6 +16,21 @@ Player::Player(Side side) {
      */
      s = side;
      board = Board();
+
+    if (!testingMinimax) {
+        return;
+    }
+    char boardData[64] = {
+        ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+        ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+        ' ', 'b', ' ', ' ', ' ', ' ', ' ', ' ',
+        'b', 'w', 'b', 'b', 'b', 'b', ' ', ' ',
+        ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+        ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+        ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',
+        ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '
+    };
+    board.setBoard(boardData);
 }
 
 /*
@@ -40,11 +55,11 @@ Player::~Player() {
 Move *Player::doMove(Move *opponentsMove, int msLeft) {
     Side other = (s == BLACK) ? WHITE : BLACK;
     board.doMove(opponentsMove, other);
+    //board.print();
     /*
      * TODO: Implement how moves your AI should play here. You should first
      * process the opponent's opponents move before calculating your own move
      */
-    std::cerr << s << std::endl;
     Move *move = new Move(0,0);
     int max = -100;
     Move *best = new Move(-1,-1);
@@ -55,7 +70,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
             if (!board.checkMove(move, s)){
                 continue;
             }
-            int score = weight_heuristic(move);
+            int score = minimax(move, 1, s, &board);
             if(score > max){
                 max = score;
                 best->setX(x);
@@ -71,17 +86,49 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
         return best;
 }
 
-int Player::heuristic(Move *move){
-    Board *temp = board.copy();
-    temp->doMove(move, s);
+int Player::heuristic(Move *move, Side side, Board *b){
+    Board *temp = b->copy();
+    temp->doMove(move, side);
     int score = temp->countBlack() - temp->countWhite();
-    if(s == BLACK)
+    if(side == BLACK)
         return score;
     return -score;
 }
 
 int Player::weight_heuristic(Move *move){
     return weights[move->getY()][move->getX()];
+}
+
+int Player::minimax(Move *move, int depth, Side side, Board *b){
+    Side other = (side == BLACK) ? WHITE : BLACK;
+    if(depth == 0){
+        //std::cerr <<  move->getX() << move->getY() << side << depth << heuristic(move, side, b) << std::endl;
+        b->print();
+        if(side == BLACK)
+            return b->countBlack() - b->countWhite();
+        return  -b->countBlack() + b->countWhite();
+    }
+    Board *temp = b->copy();
+    temp->doMove(move, side);
+    int min = 100;
+    Move *worst = new Move(-1,-1);
+    for (int x = 0; x < 8; x ++) {
+        for (int y = 0; y < 8; y ++) {
+            move->setX(x);
+            move->setY(y);
+            if (!temp->checkMove(move, other)){
+                continue;
+            }
+            int score = minimax(move, depth - 1, other, temp);
+            if(score < min){
+                min = score;
+                worst->setX(x);
+                worst->setY(y);
+            }
+        }
+    }
+    return min;
+
 }
 
 
