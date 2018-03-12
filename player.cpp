@@ -112,8 +112,7 @@ int Player::minimax(Move *move, int depth, Side side, Board *b){
     }
     Board *temp = b->copy();
     temp->doMove(move, side);
-    int min = 100;
-    Move *worst = new Move(-1,-1);
+    int min = 1000;
     for (int x = 0; x < 8; x ++) {
         for (int y = 0; y < 8; y ++) {
             move->setX(x);
@@ -124,10 +123,8 @@ int Player::minimax(Move *move, int depth, Side side, Board *b){
             int score = minimax(move, depth - 1, other, temp);
             if(score < min){
                 min = score;
-                worst->setX(x);
-                worst->setY(y);
+                }
             }
-        }
     }
     delete temp;
     return min;
