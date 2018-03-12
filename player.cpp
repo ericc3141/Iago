@@ -112,7 +112,9 @@ int Player::minimax(Move *move, int depth, Side side, Board *b){
     Side other = (side == BLACK) ? WHITE : BLACK;
     if(depth == 0){
         //std::cerr <<  move->getX() << move->getY() << side << depth << heuristic(move, side, b) << std::endl;
-        return heuristic(move, side, b);
+        if(side == BLACK)
+            return b->countBlack() - b->countWhite();
+        return -b->countBlack() + b->countWhite();
     }
     Board *temp = b->copy();
     temp->doMove(move, side);
