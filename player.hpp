@@ -11,14 +11,14 @@ private:
     Side s;
     Board board;
      int weights[8][8] = {
-     	{6, -1, 1, 1, 1, 1, -1, 6},
-     	{-1, -3, 0, 0, 0, 0, -3, -1},
-     	{1, 0, 0, 0, 0, 0, 0, 1},
-     	{1, 0, 0, 0, 0, 0, 0, 1},
-     	{1, 0, 0, 0, 0, 0, 0, 1},
-     	{1, 0, 0, 0, 0, 0, 0, 1},
-     	{-1, -3, 0, 0, 0, 0, -3, -1},
-     	{6, -1, 1, 1, 1, 1, -1, 6}
+     	{10, 0, 4, 4, 4, 4, 0, 10},
+     	{0, 0, 2, 2, 2, 2, 0, 0},
+     	{4, 2, 1, 1, 1, 1, 2, 4},
+     	{4, 2, 1, 1, 1, 1, 2, 4},
+     	{4, 2, 1, 1, 1, 1, 2, 4},
+     	{4, 2, 1, 1, 1, 1, 2, 4},
+     	{0, 0, 2, 2, 2, 2, 0, 0},
+     	{10, 0, 4, 4, 4, 4, 0, 10}
      };
 
 public:
@@ -27,7 +27,7 @@ public:
 
     Move *doMove(Move *opponentsMove, int msLeft);
     int heuristic(Move *move, Side side, Board *b);
-    int weight_heuristic(Move *move);
+    int weight_heuristic(Side side, Board *b);
     int minimax(Move *move, int depth, Side side, Board *b);
     // Flag to tell if the player is running within the test_minimax context
     bool testingMinimax;

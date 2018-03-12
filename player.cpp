@@ -55,11 +55,6 @@ Player::~Player() {
 Move *Player::doMove(Move *opponentsMove, int msLeft) {
     Side other = (s == BLACK) ? WHITE : BLACK;
     board.doMove(opponentsMove, other);
-    //board.print();
-    /*
-     * TODO: Implement how moves your AI should play here. You should first
-     * process the opponent's opponents move before calculating your own move
-     */
     Move *move = new Move(0,0);
     int max = -100;
     Move *best = new Move(-1,-1);
@@ -70,7 +65,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
             if (!board.checkMove(move, s)){
                 continue;
             }
-            int score = minimax(move, 1, s, &board);
+            int score = minimax(move, 5, s, &board);
             if(score > max){
                 max = score;
                 best->setX(x);
@@ -90,23 +85,30 @@ int Player::heuristic(Move *move, Side side, Board *b){
     Board *temp = b->copy();
     temp->doMove(move, side);
     int score = temp->countBlack() - temp->countWhite();
+    delete temp;
     if(side == BLACK)
         return score;
     return -score;
 }
 
-int Player::weight_heuristic(Move *move){
-    return weights[move->getY()][move->getX()];
+int Player::weight_heuristic(Side side, Board *b){
+    int count  = 0;
+    Side other = (side == BLACK) ? WHITE : BLACK;
+    for(int i = 0 ; i < 8 ; i++){
+        for(int j = 0; j < 8 ; j++){
+            if(b->get(side, i, j))
+                count += weights[i][j];
+            if(b->get(other, i , j))
+                count -= weights[i][j];
+        }
+    }
+    return count;
 }
 
 int Player::minimax(Move *move, int depth, Side side, Board *b){
     Side other = (side == BLACK) ? WHITE : BLACK;
     if(depth == 0){
-        //std::cerr <<  move->getX() << move->getY() << side << depth << heuristic(move, side, b) << std::endl;
-        b->print();
-        if(side == BLACK)
-            return b->countBlack() - b->countWhite();
-        return  -b->countBlack() + b->countWhite();
+            return weight_heuristic(s, b);
     }
     Board *temp = b->copy();
     temp->doMove(move, side);
@@ -127,6 +129,7 @@ int Player::minimax(Move *move, int depth, Side side, Board *b){
             }
         }
     }
+    delete temp;
     return min;
 
 }
