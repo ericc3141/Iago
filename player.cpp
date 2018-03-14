@@ -70,7 +70,7 @@ Move *Player::doMove(Move *opponentsMove, int msLeft) {
                 score = minimax(move, 1, s, &board);
             } 
             else {
-                score = minimax(move, 5, s, &board);
+                score = minimax(move, 3, s, &board);
             }
             if(score > max){
                 max = score;
